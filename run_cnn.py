@@ -108,7 +108,7 @@ if __name__ == '__main__':
         'momentum': args.momentum,
         'batch_size': args.batch,
         'max_epoch': args.epoch,
-        'disp_freq': 100,
+        'disp_freq': 0,
         'test_epoch': 1
     }
     # write configurations to log file
@@ -148,6 +148,11 @@ if __name__ == '__main__':
             test_acc_list.append(test_acc)
             msg = '    Testing, total mean loss %.5f, total acc %.5f' % (test_loss, test_acc)
             LOG_INFO(msg, to_file=log_file)
+
+    LOG_INFO('Best train loss: %.5f' % (min(train_loss_list)), to_file=log_file)
+    LOG_INFO('Best train acc: %.5f' % (max(train_acc_list)), to_file=log_file)
+    LOG_INFO('Best test loss: %.5f' % (min(test_loss_list)), to_file=log_file)
+    LOG_INFO('Best test acc: %.5f' % (max(test_acc_list)), to_file=log_file)
 
     # plot train and test loss using matplotlib
     x = range(1, config['max_epoch'] + 1)
