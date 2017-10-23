@@ -20,6 +20,9 @@ class Layer(object):
     def _saved_for_backward(self, tensor):
         self._saved_tensor = tensor
 
+    def __str__(self):
+        return self.name
+
 
 class Relu(Layer):
     def __init__(self, name):
@@ -84,6 +87,9 @@ class Linear(Layer):
         self.diff_b = mm * self.diff_b + (self.grad_b + wd * self.b)
         self.b = self.b - lr * self.diff_b
 
+    def __str__(self):
+        return '{} {}-->{}'.format(self.name, self.in_num, self.out_num)
+
 
 class Reshape(Layer):
     def __init__(self, name, new_shape):
@@ -98,13 +104,18 @@ class Reshape(Layer):
         input = self._saved_tensor
         return grad_output.reshape(*input.shape)
 
+    def __str__(self):
+        return '{}-->{}'.format(self.name, str(self.new_shape))
+
 
 class Conv2D(Layer):
     def __init__(self, name, in_channel, out_channel, kernel_size, pad, init_std):
         super(Conv2D, self).__init__(name, trainable=True)
+        self.in_channel = in_channel
+        self.out_channel = out_channel
         self.kernel_size = kernel_size
         self.pad = pad
-        self.W = np.random.randn(out_channel, in_channel, kernel_size, kernel_size)
+        self.W = np.random.randn(out_channel, in_channel, kernel_size, kernel_size) * init_std
         self.b = np.zeros(out_channel)
 
         self.diff_W = np.zeros(self.W.shape)
@@ -134,6 +145,9 @@ class Conv2D(Layer):
         self.diff_b = mm * self.diff_b + (self.grad_b + wd * self.b)
         self.b = self.b - lr * self.diff_b
 
+    def __str__(self):
+        return '{} {}--[{}*{}]-->{}'.format(self.name, self.in_channel, self.kernel_size, self.kernel_size, self.out_channel)
+
 
 class AvgPool2D(Layer):
     def __init__(self, name, kernel_size, pad):
@@ -150,3 +164,6 @@ class AvgPool2D(Layer):
         input = self._saved_tensor
         grad_input = avgpool2d_backward(input, grad_output, self.kernel_size, self.pad)
         return grad_input
+
+    def __str__(self):
+        return '{} [{}*{}]'.format(self.name, self.kernel_size, self.kernel_size)

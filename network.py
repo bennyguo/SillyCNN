@@ -24,3 +24,6 @@ class Network(object):
         for i in range(self.num_layers):
             if self.layer_list[i].trainable:
                 self.layer_list[i].update(config)
+
+    def __str__(self):
+        return '\r\n'.join([str(layer) for layer in self.layer_list])
