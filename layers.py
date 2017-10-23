@@ -121,17 +121,14 @@ class Conv2D(Layer):
         self.diff_W = np.zeros(self.W.shape)
         self.diff_b = np.zeros(out_channel)
 
-        self.cache = None
-
     def forward(self, input):
         self._saved_for_backward(input)
-        output, cache = conv2d_forward(input, self.W, self.b, self.kernel_size, self.pad)
-        self.cache = cache
+        output = conv2d_forward(input, self.W, self.b, self.kernel_size, self.pad)
         return output
 
     def backward(self, grad_output):
         input = self._saved_tensor
-        grad_input, self.grad_W, self.grad_b = conv2d_backward(input, grad_output, self.W, self.b, self.kernel_size, self.pad, self.cache)
+        grad_input, self.grad_W, self.grad_b = conv2d_backward(input, grad_output, self.W, self.b, self.kernel_size, self.pad)
         return grad_input
 
     def update(self, config):
