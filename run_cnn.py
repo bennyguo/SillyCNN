@@ -68,6 +68,14 @@ if __name__ == '__main__':
         Learning rate scheduler\
         """
     )
+    parser.add_argument(
+        '--init',
+        type=float,
+        default=1,
+        help="""\
+        Conv filter initialization\
+        """
+    )
     args = parser.parse_args()
 
     # use model name to determine log filename and plot filename
@@ -82,10 +90,10 @@ if __name__ == '__main__':
     # Your model defintion here
     # You should explore different model architecture
     model = Network()
-    model.add(Conv2D('conv1', 1, 4, 3, 1, 1))
+    model.add(Conv2D('conv1', 1, 4, 3, 1, args.init))
     model.add(Relu('relu1'))
     model.add(AvgPool2D('pool1', 2, 0))  # output shape: N x 4 x 14 x 14
-    model.add(Conv2D('conv2', 4, 4, 3, 1, 1))
+    model.add(Conv2D('conv2', 4, 4, 3, 1, args.init))
     model.add(Relu('relu2'))
     model.add(AvgPool2D('pool2', 2, 0))  # output shape: N x 4 x 7 x 7
     model.add(Reshape('flatten', (-1, 196)))
@@ -121,7 +129,7 @@ if __name__ == '__main__':
         scheduler = EmptyScheduler(config['learning_rate'])
     elif scheduler_str == 'step':
         # StepScheduler decay learning rate by 0.1 every 10 epochs
-        scheduler = StepScheduler(config['learning_rate'], step_size=50, decay=0.5, min_lr=1e-4)
+        scheduler = StepScheduler(config['learning_rate'], step_size=50, decay=0.5, min_lr=1e-6)
     else:
         raise Exception('Scheduler named {} not found.'.format(scheduler_str))
 
