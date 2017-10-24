@@ -5,6 +5,8 @@ from loss import EuclideanLoss, SoftmaxCrossEntropyLoss
 from solve_net import train_net, test_net
 from load_data import load_mnist_4d
 from scheduler import EmptyScheduler, StepScheduler
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import argparse
 
