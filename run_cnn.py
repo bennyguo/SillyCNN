@@ -108,7 +108,7 @@ if __name__ == '__main__':
         'momentum': args.momentum,
         'batch_size': args.batch,
         'max_epoch': args.epoch,
-        'disp_freq': 100,
+        'disp_freq': 0,
         'test_epoch': 1
     }
     # write configurations to log file
