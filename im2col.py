@@ -1,6 +1,10 @@
 import numpy as np
 
 
+#
+# These functions come from Stanford CS231n course (in assignment2 codes)
+# For details please see http://cs231n.github.io/assignments2017/assignment2/
+#
 def get_im2col_indices(x_shape, field_height, field_width, padding=1, stride=1):
     # First figure out what the size of the output should be
     N, C, H, W = x_shape
