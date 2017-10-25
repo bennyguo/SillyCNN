@@ -49,7 +49,7 @@ def conv2d_backward(input, grad_output, W, b, kernel_size, pad, cache):
     grad_output_mat = im2col_cython(grad_output, kernel_size, kernel_size, kernel_size - 1, 1)
     W_mat = np.rot90(W, 2, (2, 3)).transpose(1, 0, 2, 3).reshape(cin, -1)
     grad_input = W_mat.dot(grad_output_mat).reshape(cin, hin + 2 * pad, win + 2 * pad, batch)[:, pad:hin + pad, pad:win + pad, :].transpose(3, 0, 1, 2)
-    grad_W = grad_output.transpose(1, 0, 2, 3).reshape(cout, -1).dot(input_mat.T).reshape(W.shape)
+    grad_W = grad_output.transpose(1, 2, 3, 0).reshape(cout, -1).dot(input_mat.T).reshape(W.shape)
     grad_b = np.sum(grad_output, axis=(0, 2, 3))
     return grad_input, grad_W, grad_b
 
@@ -89,6 +89,6 @@ def avgpool2d_backward(input, grad_output, kernel_size, pad):
     grad_output_reshaped = grad_output.transpose(1, 2, 3, 0).reshape(cin, -1)
     grad_input_mat = np.repeat(grad_output_reshaped, kernel_size * kernel_size, axis=0) / float(kernel_size * kernel_size)
     # grad_input = col2im(grad_input_mat, input.shape, kernel_size, kernel_size, pad, kernel_size)[:, :, pad:pad + hin, pad:pad + win]
-    grad_input = col2im_cython(grad_input_mat, batch, cin, hin, win, kernel_size, kernel_size, pad, kernel_size)[:, :, pad:pad + hin, pad:pad + win]
+    grad_input = col2im_cython(grad_input_mat, batch, cin, hin, win, kernel_size, kernel_size, pad, kernel_size)
     return grad_input
 
