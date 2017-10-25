@@ -6,10 +6,12 @@ from solve_net import train_net, test_net
 from load_data import load_mnist_4d
 from scheduler import EmptyScheduler, StepScheduler
 import matplotlib
-matplotlib.use('Agg')
+from sys import platform
+if platform == 'linux' or platform == 'linux2':
+    matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import argparse
-
+from visualize import vis_conv
 
 if __name__ == '__main__':
     # read command line arguments
@@ -183,3 +185,9 @@ if __name__ == '__main__':
     plt.plot(x, test_acc_list, 'b', label='Test')
     plt.legend(loc='lower right')
     plt.savefig(acc_plot_file)
+    plt.clf()
+
+    # plot conv1 feature maps
+    if not (platform == 'linux' or platform == 'linux2'):
+        vis_conv(model, train_data, train_label, 4, 'conv1')
+        vis_conv(model, train_data, train_label, 4, 'conv2')
